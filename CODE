@@ -1,0 +1,494 @@
+#include <iostream>
+#include <cstdlib>
+#include <ctime>
+#include <fstream>
+#include <time.h>
+using namespace std;
+int *random(int arr[], int size);
+void SORT(int arr[], int size);
+void merge(int a[], int beg, int mid, int end);
+void insertion(int arr[], int size);
+void quick(int arr[],int low,int high,int size);
+void quick1(int arr[],int low,int high,int size);
+void quick2(int arr[],int low,int high,int size);
+void quick3(int arr[],int low,int high,int size);
+void mergeSort(int arr[], int beg, int end);
+void SORT(int arr[], int size)
+{
+    clock_t start, end;
+    double tot;
+    cout << "INSERTION SORT" << endl;
+    start = clock();
+    insertion(arr,size);
+    end = clock();
+    tot = ((double)(end - start)) / CLOCKS_PER_SEC;
+    cout << "Time taken by this algorithm: " << tot << "sec" << endl;
+
+    cout << "MERGE SORT" << endl;
+    start = clock();
+    mergeSort(arr,0,size-1);
+    end = clock();
+    tot = ((double)(end - start)) / CLOCKS_PER_SEC;
+    cout << "Time taken by this algorithm: " << tot << "sec" << endl;
+
+    cout << "QUICK SORT" << endl;
+    start = clock();
+    quick(arr,0,size,size);
+    end = clock();
+    tot = ((double)(end - start)) / CLOCKS_PER_SEC;
+    cout << "Time taken by this algorithm: " << tot << "sec" << endl;
+
+    cout << "QUICK SORT I" << endl;
+    start = clock();
+    quick1(arr,0,size,size);
+    end = clock();
+    tot = ((double)(end - start)) / CLOCKS_PER_SEC;
+    cout << "Time taken by this algorithm: " << tot << "sec" << endl;
+
+    cout << "QUICK SORT II" << endl;
+    start = clock();
+    quick2(arr,0,size,size);
+    end = clock();
+    tot = ((double)(end - start)) / CLOCKS_PER_SEC;
+    cout << "Time taken by this algorithm: " << tot << "sec" << endl;
+
+    cout << "QUICK SORT III" << endl;
+    start = clock();
+    quick3(arr,0,size,size);
+    end = clock();
+    tot = ((double)(end - start)) / CLOCKS_PER_SEC;
+    cout << "Time taken by this algorithm: " << tot << "sec" << endl;
+}
+void merge(int a[], int beg, int mid, int end)
+{
+    int i, j, k;
+    int n1 = mid - beg + 1;
+    int n2 = end - mid;
+    int *LeftArray;
+    int *RightArray;
+    LeftArray = new int[n1];
+    RightArray = new int[n2];
+
+    for (int i = 0; i < n1; i++)
+    {
+        LeftArray[i] = a[beg + i];
+    }
+    for (int j = 0; j < n2; j++)
+    {
+        RightArray[j] = a[mid + 1 + j];
+    }
+
+    i = 0;
+    j = 0;
+    k = beg;
+
+    while (i < n1 && j < n2)
+    {
+        if (LeftArray[i] <= RightArray[j])
+        {
+            a[k] = LeftArray[i];
+            i++;
+        }
+        else
+        {
+            a[k] = RightArray[j];
+            j++;
+        }
+        k++;
+    }
+    while (i < n1)
+    {
+        a[k] = LeftArray[i];
+        i++;
+        k++;
+    }
+
+    while (j < n2)
+    {
+        a[k] = RightArray[j];
+        j++;
+        k++;
+    }
+}
+void mergeSort(int arr[], int beg, int end)
+{
+    if (beg < end)
+    {
+        int mid = (beg + end) / 2;
+        mergeSort(arr, beg, mid);
+        mergeSort(arr, mid + 1, end);
+        merge(arr, beg, mid, end);
+    }
+}
+void insertion(int arr[], int size)
+{
+    int key, j;
+    for (int i = 1; i < size; i++)
+    {
+        key = arr[i];
+        j = i - 1;
+
+        while (j >= 0 && arr[j] > key)
+        {
+            arr[j + 1] = arr[j];
+            j = j - 1;
+        }
+        arr[j + 1] = key;
+    }
+}
+void quick(int arr[],int low,int high,int size)
+{
+    if(low>=high){
+        return;
+    }
+
+    int mid=(low+high)/2;
+    int pivot=arr[mid];
+    int i=low,j=high;
+    int temp;
+    while(i<j)
+    {
+        if(arr[i]>=pivot && arr[j]<=pivot)
+        {
+            temp=arr[j];
+            arr[j]=arr[i];
+            arr[i]=temp;
+            i++;
+            j--;
+        }
+        else
+        {
+            i++;
+        }
+    }
+    quick(arr,low,mid,size);
+    quick(arr,mid+1,high,size);
+}
+void quick1(int arr[],int low,int high,int size)
+{
+    if(low>=high){
+        return;
+    }
+
+    int mid=(low+high)/2;
+    int ran=rand()%high;
+    int pivot=arr[ran];
+    int i=low,j=high;
+    int temp;
+    while(i<j)
+    {
+        if(arr[i]>=pivot && arr[j]<=pivot)
+        {
+            temp=arr[j];
+            arr[j]=arr[i];
+            arr[i]=temp;
+            i++;
+            j--;
+        }
+        else
+        {
+            i++;
+        }
+    }
+    quick1(arr,low,mid,size);
+    quick1(arr,mid+1,high,size);
+}
+int median(int arr[],int size){
+    return (arr[(size-1)/2]+arr[size/2])/2;
+}
+void quick2(int arr[],int low,int high,int size)
+{
+    if(low>=high){
+        return;
+    }
+
+    int mid=(low+high)/2;
+    int pivot=median(arr,size);
+    int i=low,j=high;
+    int temp;
+    while(i<j)
+    {
+        if(arr[i]>=pivot && arr[j]<=pivot)
+        {
+            temp=arr[j];
+            arr[j]=arr[i];
+            arr[i]=temp;
+            i++;
+            j--;
+        }
+        else
+        {
+            i++;
+        }
+    }
+    quick2(arr,low,mid,size);
+    quick2(arr,mid+1,high,size);
+}
+void quick3(int arr[],int low,int high,int size)
+{
+    if(low>=high){
+        return;
+    }
+
+    int mid=(low+high)/2;
+    for (int i = 0; i < size-1; i++){    
+        for (int j = 0; j < size-i-1; j++){
+            if (arr[j] > arr[j+1]){
+                int temp=arr[j];
+                arr[j]=arr[j+1];
+                arr[j+1]=temp;
+            }
+        }
+    }
+    int pivot=median(arr,size);
+    int i=low,j=high;
+    int temp;
+    while(i<j)
+    {
+        if(arr[i]>=pivot && arr[j]<=pivot)
+        {
+            temp=arr[j];
+            arr[j]=arr[i];
+            arr[i]=temp;
+            i++;
+            j--;
+        }
+        else
+        {
+            i++;
+        }
+    }
+    quick3(arr,low,mid,size);
+    quick3(arr,mid+1,high,size);
+}
+int *random(int arr[], int size)
+{
+    int max = 10000;
+    srand(time(0));
+    for (int i = 0; i < size; i++)
+    {
+        arr[i] = rand() % max;
+    }
+    return arr;
+}
+int main()
+{
+    int count = 0;
+    int *arr;
+
+    while (count != 7)
+    {
+        if (count == 0)
+        {
+            int n = 50;
+            arr = new int[n];
+            arr = random(arr, n);
+            fstream fp;
+            fp.open("fifty.txt", ios::out);
+            if (!fp)
+            {
+                cout << "File not created" << endl;
+            }
+            else
+            {
+                cout << "File created successfully!" << endl;
+                for (int i = 0; i < n; i++)
+                {
+                    fp << arr[i];
+                    fp << "\n";
+                }
+                int *sarr = new int[n];
+                int i = 0;
+                while (fp.eof())
+                {
+                    fp >> sarr[i];
+                    i++;
+                }
+                cout<<"Filename: fifty.txt"<<endl;
+                SORT(sarr,n);
+            }
+        }
+        else if (count == 1)
+        {
+            int n = 100;
+            arr = new int[n];
+            arr = random(arr, n);
+            fstream fp;
+            fp.open("hundred.txt", ios::out);
+            if (!fp)
+            {
+                cout << "File not created" << endl;
+            }
+            else
+            {
+                cout << "File created successfully!" << endl;
+                for (int i = 0; i < n; i++)
+                {
+                    fp << arr[i];
+                    fp << "\n";
+                }
+                int *sarr = new int[n];
+                int i = 0;
+                while (fp.eof())
+                {
+                    fp >> sarr[i];
+                    i++;
+                }
+                cout<<"Filename: hundred.txt"<<endl;
+                SORT(sarr,n);
+            }
+        }
+        else if (count == 2)
+        {
+            int n = 200;
+            arr = new int[n];
+            arr = random(arr, n);
+            fstream fp;
+            fp.open("twoh.txt", ios::out);
+            if (!fp)
+            {
+                cout << "File not created" << endl;
+            }
+            else
+            {
+                cout << "File created successfully!" << endl;
+                for (int i = 0; i < n; i++)
+                {
+                    fp << arr[i];
+                    fp << "\n";
+                }
+                int *sarr = new int[n];
+                int i = 0;
+                while (fp.eof())
+                {
+                    fp >> sarr[i];
+                    i++;
+                }
+                cout<<"Filename: twoh.txt"<<endl;
+                SORT(sarr,n);
+            }
+        }
+        else if (count == 3)
+        {
+            int n = 300;
+            arr = new int[n];
+            arr = random(arr, n);
+            fstream fp;
+            fp.open("threeh.txt", ios::out);
+            if (!fp)
+            {
+                cout << "File not created" << endl;
+            }
+            else
+            {
+                cout << "File created successfully!" << endl;
+                for (int i = 0; i < n; i++)
+                {
+                    fp << arr[i];
+                    fp << "\n";
+                }
+                int *sarr = new int[n];
+                int i = 0;
+                while (fp.eof())
+                {
+                    fp >> sarr[i];
+                    i++;
+                }
+                cout<<"Filename: threeh.txt"<<endl;
+                SORT(sarr,n);
+            }
+        }
+        else if (count == 4)
+        {
+            int n = 400;
+            arr = new int[n];
+            arr = random(arr, n);
+            fstream fp;
+            fp.open("fourh.txt", ios::out);
+            if (!fp)
+            {
+                cout << "File not created" << endl;
+            }
+            else
+            {
+                cout << "File created successfully!" << endl;
+                for (int i = 0; i < n; i++)
+                {
+                    fp << arr[i];
+                    fp << "\n";
+                }
+                int *sarr = new int[n];
+                int i = 0;
+                while (fp.eof())
+                {
+                    fp >> sarr[i];
+                    i++;
+                }
+                cout<<"Filename: fourh.txt"<<endl;
+                SORT(sarr,n);
+            }
+        }
+        else if (count == 5)
+        {
+            int n = 500;
+            arr = new int[n];
+            arr = random(arr, n);
+            fstream fp;
+            fp.open("fiveh.txt", ios::out);
+            if (!fp)
+            {
+                cout << "File not created" << endl;
+            }
+            else
+            {
+                cout << "File created successfully!" << endl;
+                for (int i = 0; i < n; i++)
+                {
+                    fp << arr[i];
+                    fp << "\n";
+                }
+                int *sarr = new int[n];
+                int i = 0;
+                while (fp.eof())
+                {
+                    fp >> sarr[i];
+                    i++;
+                }
+                cout<<"Filename: fiveh.txt"<<endl;
+                SORT(sarr,n);
+            }
+        }
+        else if (count == 6)
+        {
+            int n = 1000;
+            arr = new int[n];
+            arr = random(arr, n);
+            fstream fp;
+            fp.open("thoush.txt", ios::out);
+            if (!fp)
+            {
+                cout << "File not created" << endl;
+            }
+            else
+            {
+                
+                cout << "File created successfully!" << endl;
+                for (int i = 0; i < n; i++)
+                {
+                    fp << arr[i];
+                    fp << "\n";
+                }
+                int *sarr = new int[n];
+                int i = 0;
+                while (fp.eof())
+                {
+                    fp >> sarr[i];
+                    i++;
+                }
+                cout<<"Filename: thoush.txt"<<endl;
+                SORT(sarr,n);
+            }
+        }
+        count++;
+    }
+}
